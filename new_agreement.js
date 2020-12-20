@@ -152,14 +152,14 @@ Navicon.nav_Agreement = (function()
 
   function setPreSearchListenerToCredit(formContext)
   {
-    const credit = Navicon.nav_Utils.GetControlByName(formContext.ui, VARS.TabGeneral, VARS.FieldCredit);
+    const credit = Navicon.nav_Utils.getControlByName(formContext.ui, VARS.TabGeneral, VARS.FieldCredit);
 
     credit.addPreSearch(onCreditPreSearch);
   }
 
   function onCreditPreSearch(context)
   {
-    const credit = Navicon.nav_Utils.GetControlByName(context.getFormContext().ui, VARS.TabGeneral, VARS.FieldCredit);
+    const credit = Navicon.nav_Utils.getControlByName(context.getFormContext().ui, VARS.TabGeneral, VARS.FieldCredit);
 
     const autoidValue = context.getFormContext().getAttribute(VARS.FieldAuto).getValue();
 

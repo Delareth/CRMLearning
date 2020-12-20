@@ -18,7 +18,7 @@ Navicon.nav_Utils = (function()
     /**
      * @returns {Xrm.Page.Control}
      */
-    GetControlByName: function(ui, tabName, fieldName)
+    getControlByName: function(ui, tabName, fieldName)
     {
       const tab = ui.tabs.get(tabName);
 
@@ -33,7 +33,7 @@ Navicon.nav_Utils = (function()
     },
     setFieldShowState: function(ui, tab, fieldName, state)
     {
-      const control = this.GetControlByName(ui, tab, fieldName);
+      const control = this.getControlByName(ui, tab, fieldName);
 
       control.setVisible(state);
     },
