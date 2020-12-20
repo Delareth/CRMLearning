@@ -1,0 +1,14 @@
+{
+  "name": "crm-learning",
+  "version": "1.0.0",
+  "description": "test project",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Delareth",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.15.0"
+  }
+}

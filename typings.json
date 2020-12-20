@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "xrm": "registry:dt/xrm#8.2.0+20170310224739"
+  }
+}
