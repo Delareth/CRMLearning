@@ -25,7 +25,7 @@ Navicon.nav_Agreement = (function()
   {
     const availableFields = [
       VARS.FieldAuto, VARS.FieldContact, VARS.FieldName, 
-      VARS.FieldAgreementNumber, VARS.FieldDate
+      VARS.FieldAgreementNumber, VARS.FieldDate, VARS.FieldCredit
     ];
 
     const tab = ui.tabs.get(VARS.TabGeneral);
@@ -64,7 +64,11 @@ Navicon.nav_Agreement = (function()
     const formContext = context.getFormContext();
     const autoRef = formContext.getAttribute(VARS.FieldAuto).getValue(); 
 
-    if (autoRef !== null) setAutoSumma(formContext, autoRef[0].id);
+    if (autoRef !== null) 
+    {
+      setAutoSumma(formContext, autoRef[0].id);
+      setCustomViewToCredit(formContext);
+    }
 
     onContactOrAutoChanged(context);
   }
@@ -178,25 +182,25 @@ Navicon.nav_Agreement = (function()
     normalizeAndSetAgreementField(field);
   }
 
-  function setPreSearchListenerToCredit(formContext)
+  function setCustomViewToCredit(formContext)
   {
     const credit = Navicon.nav_Utils.getControlByName(formContext.ui, VARS.TabGeneral, VARS.FieldCredit);
+    const autoRef = formContext.getAttribute(VARS.FieldAuto).getValue();
+    
+    if (autoRef === null) 
+    {
+      console.error("Can't set custom view to credit cause autoid is empty");
+      return;
+    }
 
-    credit.addPreSearch(onCreditPreSearch);
-  }
-
-  function onCreditPreSearch(context)
-  {
-    const credit = Navicon.nav_Utils.getControlByName(context.getFormContext().ui, VARS.TabGeneral, VARS.FieldCredit);
-
-    const autoidValue = context.getFormContext().getAttribute(VARS.FieldAuto).getValue();
-
-    let customerAccountFilter = 
-      "<filter type='and'>" + 
-      "<condition attribute='new_autoid' operator='eq' value='" + autoidValue[0].id + "'/>" + 
-      "</filter>";
-
-    credit.addCustomFilter(customerAccountFilter, "new_credit");
+    credit.addCustomView(
+      "00000000-0000-0000-0000-000000000001",
+      "new_credit",
+      "Кредитные программы",
+      getCreditFetch(autoRef[0].name, autoRef[0].id),
+      getLayoutForCredit(),
+      true
+    );
   }
 
   function onCreditProgramChanged(context)
@@ -329,6 +333,39 @@ Navicon.nav_Agreement = (function()
     });
   }
 
+  function getCreditFetch(uiname, autoID)
+  {
+    return '<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">' +
+    '<entity name="new_credit">' +
+    '  <attribute name="new_creditid" />' +
+    '  <attribute name="new_name" />' +
+    '  <attribute name="new_percent" />' +
+    '  <attribute name="new_dateend" />' +
+    '  <attribute name="new_datestart" />' +
+    '  <order attribute="new_name" descending="false" />' +
+    '  <link-entity name="new_new_credit_new_auto" from="new_creditid" to="new_creditid" visible="false" intersect="true">' +
+    '    <link-entity name="new_auto" from="new_autoid" to="new_autoid" alias="ae">' +
+    '      <filter type="and">' +
+    '        <condition attribute="new_autoid" operator="eq" uiname="' + uiname + '" uitype="new_auto" value="' + autoID +'" />' +
+    '      </filter>' +
+    '    </link-entity>' +
+    '  </link-entity>' +
+    '</entity>' +
+    '</fetch>';
+  }
+
+  function getLayoutForCredit()
+  {
+    return "" +
+      "<grid name='resultset' jump='fullname' select='1' icon='1' preview='1'>" +  
+      "<row name = 'result' id = 'new_credit' >" +  
+      "<cell name='new_name' width='300' />" +  
+      "<cell name='new_datestart' width='125' />" +  
+      "<cell name='new_dateend' width='125' />" +  
+      "<cell name='new_creditperiod' width='150' />" +  
+      "</row></grid>";
+  }
+
   return {
     onLoad: function(context)
     {
@@ -340,7 +377,7 @@ Navicon.nav_Agreement = (function()
       setListenersOnContactAndAuto(formContext);
       setListenerToAgreementField(formContext);
 
-      setPreSearchListenerToCredit(formContext);
+      setCustomViewToCredit(formContext);
     },
     onSave: function(context)
     {
