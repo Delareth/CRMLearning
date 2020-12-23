@@ -4,11 +4,11 @@ var Navicon = Navicon || {};
 
 Navicon.nav_Model = (function()
 {
-  const ADMINROLEID = "fe8dce58-773c-eb11-bf69-000d3a49de7b";
+  const ADMINROLENAME = "System Administrator";
 
   function checkIsUserSystemAdmin(formContext)
   {
-    const isSystemAdmin = isUserWithRole(ADMINROLEID);
+    const isSystemAdmin = isUserWithRole(ADMINROLENAME);
 
     changeLockStateForAllFields(formContext.ui, !isSystemAdmin);
   }
@@ -26,14 +26,14 @@ Navicon.nav_Model = (function()
     }
   }
 
-  function isUserWithRole(roleId)
+  function isUserWithRole(roleName)
   {
     // eslint-disable-next-line no-undef
-    const currentUserRoles = Xrm.Utility.getGlobalContext().userSettings.securityRoles;
+    const currentUserRoles = Xrm.Utility.getGlobalContext().userSettings.roles.get();
 
-    for (let userRoleID of currentUserRoles)
+    for (let role of currentUserRoles)
     {
-      if (userRoleID === roleId) return true;
+      if (role.name === roleName) return true;
     }
 
     return false;
