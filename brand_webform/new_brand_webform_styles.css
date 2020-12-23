@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+ }
+
+.table_row {
+  display: flex;
+  justify-content: center;
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  font-family: SegoeUI, "Segoe UI";
+  font-weight: 600;
+}
+
+.table_row:first-child {
+  color: rgb(68, 68, 68);
+  font-weight: 400;
+}
+
+.table_row_elem {
+  display: flex;
+  align-items: center;
+  flex: 1 1 30%;
+  min-height: 49px;
+  border-bottom: 1px solid rgb(216, 216, 216);
+  transition: .1s ease-in-out;
+  cursor: pointer;
+  padding-left: calc(14px + 0.5em);
+}
+
+.table_row_elem:hover {
+  background: rgb(232, 232, 232);
+}
+
+.table_row_elem:last-child:hover,
+.table_row:first-child > .table_row_elem:hover {
+  background: inherit;
+  cursor: inherit;
+}
